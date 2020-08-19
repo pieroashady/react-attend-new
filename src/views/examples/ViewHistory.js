@@ -81,13 +81,13 @@ class ViewHistory extends React.Component {
 		this.setState({ loading: true });
 		const { searchBy, searchValue } = this.state;
 		const userId = this.props.match.params.id;
-		console.log(userId);
+
+		const Search = Parse.Object.extend(handleConvert(searchBy));
+		const query = new Parse.Query(Search);
 
 		let status;
 
 		if (searchBy === 'Absen') {
-			const Search = Parse.Object.extend(handleConvert(searchBy));
-			const query = new Parse.Query(Search);
 			query.equalTo('leaderId', getLeaderId);
 			query.ascending('absenMasuk');
 			query.include('user');
@@ -107,8 +107,6 @@ class ViewHistory extends React.Component {
 		}
 
 		if (searchBy === 'Cuti') {
-			const Search = Parse.Object.extend('Izin');
-			const query = new Parse.Query(Search);
 			query.descending('createdAt');
 			query.equalTo('user', { __type: 'Pointer', className: '_User', objectId: userId });
 			query.include('user');
@@ -131,8 +129,6 @@ class ViewHistory extends React.Component {
 		}
 
 		if (searchBy === 'Izin') {
-			const Search = Parse.Object.extend('Izin');
-			const query = new Parse.Query(Search);
 			query.include('user');
 			query.equalTo('statusIzin', 1);
 			query.equalTo('status', 3);
